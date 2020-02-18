@@ -2,6 +2,7 @@ import datetime
 import tweepy
 import os
 from PIL import Image, ImageDraw, ImageFont
+import shutil
 import urllib.request
 
 global n_tweets;
@@ -53,11 +54,11 @@ def images2video(f_name = 'Temp'):
     ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '.mp4';
     os.system(ffmpeg_line);
     
-def tweet2video(scr_name):
+def tweet2video(scr_name, event):
     # This will be the overarching program that handles the queue and processes.
-    f_name = str(datetime.datetime.now());
-    f_name = f_name.replace(':','-');
-    f_name = f_name.replace(' ','--');
+    f_name = str(datetime.datetime.now()); # Using the date and time for each process guarentees unique folder names
+    f_name = f_name.replace(':','-'); # Windows can't name folders with colons
+    f_name = f_name.replace(' ','--'); # The space confuses ffmpeg
     try:
         os.mkdir('Video/' + f_name)
     except FileExistsError:
@@ -67,5 +68,7 @@ def tweet2video(scr_name):
     completed = tweets2images(tweets, types, f_name);
     if completed: 
         images2video(f_name);
+        shutil.rmtree('Video/' + f_name) # Deletes the image files used to create the video. 
+        event.set()
     else: 
         print('Error creating tweets from images for screen name: ' + scr_name);
