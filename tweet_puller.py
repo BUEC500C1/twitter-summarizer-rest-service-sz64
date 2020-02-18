@@ -1,6 +1,9 @@
 import tweepy
 import datetime
 
+global n_tweets;
+n_tweets = 20;
+
 def tweet_pull(scr_name):
 
 	keys = open("TKey.txt").read().split();
@@ -11,7 +14,6 @@ def tweet_pull(scr_name):
 
 	api = tweepy.API(auth)
 	
-	n_tweets = 20;
 	tweets = [];
 	types = [];
 	for tweet in tweepy.Cursor(api.user_timeline, screen_name=scr_name, result_type = 'recent', count = n_tweets, tweet_mode='extended').items(n_tweets):
@@ -23,4 +25,14 @@ def tweet_pull(scr_name):
 				tweets.append(im[0]['media_url']);
 				types.append('1');
 		
-	return tweets, type;
+	return tweets, types;
+	
+def tweets2video(tweets, types, f_name):
+	
+	for t in range(len(tweets)):
+		if types(t) == '0':
+			print(t);
+		elif types(t) == '1':
+			print(t);
+		else:
+			print('Error');
