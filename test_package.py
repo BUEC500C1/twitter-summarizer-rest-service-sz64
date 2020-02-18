@@ -1,4 +1,8 @@
 import tweets2video as t
 
-def test_valid():
+# Unable to test a lot of the functions without the API key. 
+def test_tweets2images():
+	assert True
+	
+def images2videos():
 	assert True
