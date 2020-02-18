@@ -2,47 +2,66 @@ from multiprocessing import Process, Event
 import threading
 import tweets2video as t
 import queue
+    
+def start_process(n_p):
+    try:
+        t = q.get()
+        p[n_p] = 1;
+        event = Event()
+        p = Process(target=t.tweet2video, args=(t,event));
+        p.start();
+        event.wait();
+        event.clear();
+        p[n_p] = 0; 
+        q.task_done();
+    except:
+        print('error');
 
 def check_queue():
     print('Thread Started')
     while True:
-        if q.empty() == False:
+        if ((q.empty() == False) and not ((sum(p) == 5) and q.full())):
             for n in range(len(p)):
                 if p[n] == 0:
                     if n == 0:
                         try: 
-                            t0 = q.get()
-                            p[n] = 1;
-                            print(t0);
+                            ts0 = threading.Thread(target=start_process, args=(n,));
+                            ts0.daemon = True;
+                            ts0.start();
                         except:
+                            print('error')
                             break
                     elif n == 1:
                         try: 
-                            t1 = q.get()
-                            p[n] = 1;
-                            print(t1);
+                            ts1 = threading.Thread(target=start_process, args=(n,));
+                            ts1.daemon = True;
+                            ts1.start();
                         except:
+                            print('error')
                             break
                     elif n == 2: 
                         try: 
-                            t2 = q.get()
-                            p[n] = 1;
-                            print(t2);
+                            ts2 = threading.Thread(target=start_process, args=(n,));
+                            ts2.daemon = True;
+                            ts2.start();
                         except:
+                            print('error')
                             break
                     elif n == 3:
                         try: 
-                            t3 = q.get()
-                            p[n] = 1;
-                            print(t3);
+                            ts3 = threading.Thread(target=start_process, args=(n,));
+                            ts3.daemon = True;
+                            ts3.start();
                         except:
+                            print('error')
                             break
                     elif n == 4:
                         try: 
-                            t4 = q.get()
-                            p[n] = 1;
-                            print(t4);
+                            ts4 = threading.Thread(target=start_process, args=(n,));
+                            ts4.daemon = True;
+                            ts4.start();
                         except:
+                            print('error')
                             break
                     else: 
                         print('Error with queueing and processes');
