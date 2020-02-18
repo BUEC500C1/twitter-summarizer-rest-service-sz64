@@ -1,5 +1,8 @@
-import tweepy
 import datetime
+import tweepy
+import os
+from PIL import Image, ImageDraw, ImageFont
+import urllib.request
 
 global n_tweets;
 n_tweets = 20;
@@ -27,12 +30,23 @@ def tweet_pull(scr_name):
 		
 	return tweets, types;
 	
-def tweets2video(tweets, types, f_name):
-	
+def tweets2images(tweets, types, f_name = 'Temp'):
 	for t in range(len(tweets)):
-		if types(t) == '0':
-			print(t);
-		elif types(t) == '1':
-			print(t);
+		if types[t] == '0':
+			im = Image.open('Video\Image Processing\default.jpg');
+			draw = ImageDraw.Draw(im);
+			font = ImageFont.truetype("arial.ttf", 50)
+			draw.text((100, 100), tweets[t], fill = 'rgb(255, 255, 255)', font = font);
+			out_name = 'Video/' + f_name + '/' + 'img' + str(t).zfill(3) + '.jpg';
+			im.save(out_name);
+		elif types[t] == '1':
+			out_name = 'Video/' + f_name + '/' + 'img' + str(t).zfill(3) + '.jpg';
+			urllib.request.urlretrieve(tweets[t], out_name)
 		else:
-			print('Error');
+			return False
+	return True
+		
+def images2video(f_name = 'Temp'):
+	ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '.mp4';
+	os.system(ffmpeg_line);
+	
