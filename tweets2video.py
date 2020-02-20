@@ -63,9 +63,9 @@ class twittervideo():
 				return False
 		return True
 			
-	def images2video(self, f_name = 'Temp'):
+	def images2video(self, f_name = 'Temp', scr_name = 'scr_name'):
 		print(f_name);
-		ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '.mp4';
+		ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '-' + scr_name + '.mp4';
 		os.system(ffmpeg_line);
 		
 	def tweet2video(self, scr_name, event):
@@ -81,7 +81,7 @@ class twittervideo():
 		tweets, types = self.tweet_pull(scr_name);
 		completed = self.tweets2images(tweets, types, f_name);
 		if completed: 
-			self.images2video(f_name);
+			self.images2video(f_name, scr_name);
 			shutil.rmtree('Video/' + f_name) # Deletes the image files used to create the video. 
 			event.set()
 		else: 
