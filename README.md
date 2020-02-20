@@ -32,4 +32,5 @@ Currently the class can only handle 5 requests at a time. This in most cases wil
 ## Future Changes
 - More calls to the application class, possible for different days or have only images and so on.
 - Better tests in the test function.
+  - Currently the test function works within terminal but not in github. Issues with paths need to be sorted out.
 - A better progress meter. 
