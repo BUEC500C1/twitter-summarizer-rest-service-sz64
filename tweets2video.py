@@ -64,7 +64,6 @@ class twittervideo():
 		return True
 			
 	def images2video(self, f_name = 'Temp', scr_name = 'scr_name'):
-		print(f_name);
 		ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '-' + scr_name + '.mp4';
 		os.system(ffmpeg_line);
 		
