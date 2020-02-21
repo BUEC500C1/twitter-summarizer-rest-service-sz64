@@ -14,3 +14,6 @@ def images2videos():
 	ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '-' + scr_name + '.mp4';
 	os.system(ffmpeg_line);
 	assert os.path.exists('Video/test-images/test-scr_name');
+	
+def check_keys():
+	assert os.path.exists('keys');
