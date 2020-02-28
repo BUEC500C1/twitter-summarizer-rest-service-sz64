@@ -16,7 +16,7 @@ def test_images2videos():
 	os.system(ffmpeg_line);
 	assert os.path.exists('Video/test-images/test-scr_name');
 
-def test_tweet_pull
+def test_tweet_pull():
 	if os.path.exists('keys'):
 		tm = t.twittervideo();
 		tweets, types = tm.tweet_pull('Google');
