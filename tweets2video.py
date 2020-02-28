@@ -1,5 +1,6 @@
 import configparser
 import datetime
+import json
 import threading
 import tweepy
 from multiprocessing import Process, Event
@@ -27,20 +28,13 @@ class twittervideo():
 
 	def tweet_pull(self, scr_name):
 		global n_tweets;
-		#keys = open("TKey.txt").read().split();
-		#consumer_key = keys[0];
-		#consumer_secret = keys[1];
-
-		#auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-
-		#api = tweepy.API(auth)
 		
 		config = configparser.ConfigParser()
 		config.read('keys')
 		auth = tweepy.OAuthHandler(config.get('auth', 'consumer_key').strip(),
 					   config.get('auth', 'consumer_secret').strip())
 		auth.set_access_token(config.get('auth', 'access_token').strip(),
-				      config.get('auth', 'access_secret').strip())
+					  config.get('auth', 'access_secret').strip())
 		api = tweepy.API(auth)
 		
 		tweets = [];
@@ -55,7 +49,7 @@ class twittervideo():
 					types.append('1');
 			
 		return tweets, types;
-		
+	
 	def tweets2images(self, tweets, types, f_name = 'Temp'):
 		for t in range(len(tweets)):
 			if types[t] == '0':
@@ -172,3 +166,13 @@ class twittervideo():
 			return status
 		else:
 			return 'Please enter a valid input';
+
+def tweet_pull_test_stub(scr_name = "test"):
+	tweets = [];
+	types = [];
+	with open('tweet_test.json') as tweet_test:
+		tweet_test = json.load(tweet_test);
+		for t in tweet_test:
+			tweets.append(t['tweet']);
+			types.append(t['type']);
+	return tweets, types;
