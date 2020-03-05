@@ -15,10 +15,12 @@ global progress; # not incorporated yet
 global initialized;
 global q;
 global p;
+global queued;
 n_tweets = 20;
 progress = 0;
 q = queue.Queue(5) # Five items can be in queue at once. 
 p = [0, 0, 0, 0, 0];
+queued = {};
 
 class twittervideo():
 	def __init__(self):
@@ -67,10 +69,15 @@ class twittervideo():
 		return True
 			
 	def images2video(self, f_name = 'Temp', scr_name = 'scr_name'):
-		ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '-' + scr_name + '.mp4';
-		os.system(ffmpeg_line);
+		try:
+			ffmpeg_line = 'ffmpeg -framerate 1/3 -i Video/' + f_name + '/img%03d.jpg Video/' + f_name + '-' + scr_name + '.mp4';
+			os.system(ffmpeg_line);
+			return True;
+		except:
+			return False;
 		
 	def tweet2video(self, scr_name, event):
+		global queued;
 		# This will be the overarching program that handles the queue and processes.
 		f_name = str(datetime.datetime.now()); # Using the date and time for each process guarentees unique folder names
 		f_name = f_name.replace(':','-'); # Windows can't name folders with colons
@@ -83,11 +90,28 @@ class twittervideo():
 		tweets, types = self.tweet_pull(scr_name);
 		completed = self.tweets2images(tweets, types, f_name);
 		if completed: 
-			self.images2video(f_name, scr_name);
-			shutil.rmtree('Video/' + f_name) # Deletes the image files used to create the video. 
-			event.set()
+			if self.images2video(f_name, scr_name):
+				shutil.rmtree('Video/' + f_name) # Deletes the image files used to create the video. 
+				try:
+					with open('links.json', 'r') as links:
+						queued = json.load(links);
+						links.close();
+				except:
+					print('Error links.json missing')
+				queued[scr_name] = f_name + '-' + scr_name + '.mp4';
+				try: 
+					with open('links.json', 'w') as links:
+						json.dump(queued,links)
+						links.close();
+				except:
+					print('Error links.json missing')
+				event.set()
+			else:
+				queued[scr_name] = 'Error';
+				event.set()
 		else: 
 			print('Error creating tweets from images for screen name: ' + scr_name);
+			queued[scr_name] = 'Error';
 			
 	def start_process(self, n_p):
 		global q;
@@ -166,7 +190,22 @@ class twittervideo():
 			return status
 		else:
 			return 'Please enter a valid input';
-
+	
+	def get_link(self, scr_name):
+		global queued;
+		try:
+			with open('links.json', 'r') as links:
+				queued = json.load(links);
+				links.close();
+		except:
+			print('Error links.json missing')
+		try:
+			link = queued[scr_name];
+		except:
+			link = 'Error: Video for this user has not been created yet';
+		return link;
+		
+	
 def tweet_pull_test_stub(scr_name = "test"):
 	tweets = [];
 	types = [];
