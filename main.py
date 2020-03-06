@@ -9,10 +9,6 @@ class twittervideo_api(Resource):
 	def put(self, scr_name):
 		tm.tweet2vid(scr_name);
 		return {scr_name: 'Added to Queue'};
-	
-	# def get(self, scr_name):
-		# link = tm.get_link(scr_name);
-		# return {scr_name: link}
 
 	def get(self, scr_name):
 		link = tm.get_link(scr_name);
@@ -25,4 +21,4 @@ api.add_resource(twittervideo_api, '/<string:scr_name>');
 
 if __name__ == "__main__":
 	tm = t.twittervideo();
-	app.run(debug=True);
+	app.run(host="0.0.0.0", port=80);

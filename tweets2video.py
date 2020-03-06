@@ -55,7 +55,7 @@ class twittervideo():
 	def tweets2images(self, tweets, types, f_name = 'Temp'):
 		for t in range(len(tweets)):
 			if types[t] == '0':
-				im = Image.open('Video\Image Processing\default.jpg');
+				im = Image.open('Video/Image Processing/default.jpg');
 				draw = ImageDraw.Draw(im);
 				font = ImageFont.truetype("arial.ttf", 50)
 				draw.text((100, 100), tweets[t], fill = 'rgb(255, 255, 255)', font = font);

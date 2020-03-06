@@ -1,2 +1,4 @@
 tweepy
 pillow
+flask-restful
+configparser
